@@ -9,7 +9,7 @@
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-  <header class="topbar">
+  <header class="topbar glass">
     <div class="brand">
       <img src="icon.svg" alt="" width="36" height="36">
       <div>
@@ -28,15 +28,19 @@
   </header>
 
   <main class="layout">
-    <section class="card" aria-labelledby="t-freight">
+    <section id="freight-card" class="card freight" aria-labelledby="t-freight">
       <div class="card-head">
         <h2 id="t-freight"><span class="step">1</span> Planilhas de frete base</h2>
         <span id="freight-count" class="pill">0/8</span>
       </div>
       <label id="drop" class="drop">
         <input id="freight-input" type="file" accept=".xls,.xlsx,.csv" multiple hidden>
+        <svg class="drop-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M12 16V4M7 9l5-5 5 5"/><path d="M4 15v3a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-3"/>
+        </svg>
         <strong>Arraste as planilhas aqui</strong>
         <span>ou clique para escolher (.xls, .xlsx ou .csv). Dá para adicionar em várias vezes.</span>
+        <img class="watermark" src="assets/avanti.png" alt="">
       </label>
       <ol id="freight-list" class="file-list"></ol>
       <button id="freight-clear" class="btn subtle" type="button" hidden>Limpar lista</button>
@@ -126,8 +130,14 @@
   </main>
 
   <footer class="foot">
-    Suas planilhas são processadas no seu navegador e não são enviadas para nenhum servidor.
-    Só os endereços públicos do IBGE são baixados.
+    <p>
+      Suas planilhas são processadas no seu navegador e não são enviadas para nenhum servidor.
+      Só os endereços públicos do IBGE são baixados.
+    </p>
+    <div class="signature">
+      <span>Desenvolvido por</span>
+      <img src="assets/avanti.png" alt="Avanti, uma empresa FCamara" width="105" height="26">
+    </div>
   </footer>
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>

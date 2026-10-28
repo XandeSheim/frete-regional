@@ -63,6 +63,7 @@
     $("freight-count").textContent = `${n}/${EXPECTED_FREIGHT_FILES}`;
     $("freight-count").classList.toggle("ok", n === EXPECTED_FREIGHT_FILES);
     $("freight-clear").hidden = !n;
+    $("freight-card").classList.toggle("has-files", n > 0);
     checkReady();
   }
   $("freight-input").addEventListener("change", (e) => { addFreight(e.target.files); e.target.value = ""; });
