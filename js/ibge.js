@@ -26,7 +26,6 @@
   const MARGEM_GRAUS = 0.03;
   // NV_GEO_COORD 1-4 = endereço/face de quadra; 5-6 = localidade/setor (impreciso)
   const NIVEL_GEO_MAX = 4;
-  const MAX_MUNICIPIOS = 80;
   const CACHE_VERSION = 1;
 
   const lib = (name, nodeName) =>
@@ -268,10 +267,6 @@
       if (!codes.length) {
         throw new Error("O polígono da loja não toca nenhum município do Brasil. " +
           "Confira se o GeoJSON está correto (longitude, latitude).");
-      }
-      if (codes.length > MAX_MUNICIPIOS) {
-        throw new Error(`O polígono toca ${codes.length} municípios (máximo ${MAX_MUNICIPIOS}). ` +
-          "Ele parece grande demais para o range de uma loja.");
       }
       const cached = {};
       for (const c of codes) cached[c] = await cache.get(c);

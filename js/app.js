@@ -137,6 +137,22 @@
   optionalFile("cfg-input", "cfg-name", "cfg-clear", "config", "Não usar (colunas VTEX reconhecidas sozinhas)",
     async (f) => JSON.parse(await f.text()));
 
+  // ------------------------------------------------------------------ prazo (TimeCost)
+  const TC_INPUTS = { retirada: "tc-retirada", entrega: "tc-entrega" };
+  const tcValue = (key) => {
+    const raw = $(TC_INPUTS[key]).value.trim();
+    const n = Number(raw);
+    return raw !== "" && Number.isInteger(n) && n >= 0 && n <= 365 ? n : null;
+  };
+  for (const [key, id] of Object.entries(TC_INPUTS)) {
+    const saved = store.get(`timecost-${key}`);
+    if (saved !== null) $(id).value = saved;
+    $(id).addEventListener("input", () => {
+      if (tcValue(key) !== null) store.set(`timecost-${key}`, $(id).value.trim());
+      checkReady();
+    });
+  }
+
   $("cache-clear").addEventListener("click", async () => {
     await FreteIBGE.clearCache();
     log("CEPs salvos no navegador apagados. A próxima geração baixa de novo do IBGE.", "info");
@@ -144,11 +160,13 @@
 
   // ------------------------------------------------------------------ gerar
   function checkReady() {
-    const ok = state.freight.length > 0 && state.geojson && !state.running;
+    const tcOk = tcValue("retirada") !== null && tcValue("entrega") !== null;
+    const ok = state.freight.length > 0 && state.geojson && tcOk && !state.running;
     $("run").disabled = !ok;
     if (state.running) return;
     if (!state.freight.length) setStatus("Escolha as planilhas de frete.");
     else if (!state.geojson) setStatus("Escolha o range da loja (.geojson).");
+    else if (!tcOk) setStatus("Informe o prazo (TimeCost) em dias inteiros, de 0 a 365.");
     else if (state.freight.length !== EXPECTED_FREIGHT_FILES)
       setStatus(`Pronto para gerar (${state.freight.length} planilha(s); o normal são ${EXPECTED_FREIGHT_FILES}).`);
     else setStatus("Pronto para gerar.");
@@ -169,6 +187,7 @@
         geojson: state.geojson.data,
         cepBase: state.cepBase,
         columnConfig: state.config,
+        timecost: { retirada: tcValue("retirada"), entrega: tcValue("entrega") },
         ibge: (polys, lg) => ibge.cepsForPolygon(polys, lg),
         progress: (pct, msg) => { setProgress(pct); setStatus(msg); },
         log,
@@ -186,7 +205,7 @@
       setProgress(0);
     } finally {
       state.running = false;
-      $("run").disabled = false;
+      checkReady();
     }
   });
 

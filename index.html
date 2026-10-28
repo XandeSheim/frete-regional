@@ -67,6 +67,21 @@
         <p class="hint">Sem arquivo, o site baixa sozinho os CEPs das cidades do range. Base própria: .csv com <code>cep, latitude, longitude</code>.</p>
       </section>
 
+      <section class="card" aria-labelledby="t-time">
+        <h2 id="t-time"><span class="step">4</span> Prazo (TimeCost)</h2>
+        <div class="time-row">
+          <label class="field">
+            <span>Retirada</span>
+            <span class="field-input"><input id="tc-retirada" type="number" min="0" max="365" step="1" value="1" inputmode="numeric"> dia(s)</span>
+          </label>
+          <label class="field">
+            <span>Entrega</span>
+            <span class="field-input"><input id="tc-entrega" type="number" min="0" max="365" step="1" value="1" inputmode="numeric"> dia(s)</span>
+          </label>
+        </div>
+        <p class="hint">Prazo gravado na coluna TimeCost de cada modelo.</p>
+      </section>
+
       <details class="card advanced">
         <summary>Avançado</summary>
         <h3>Mapeamento de colunas (config.json)</h3>

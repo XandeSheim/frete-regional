@@ -271,20 +271,22 @@
   // ===========================================================================
   // REGRAS DOS MODELOS
   // ===========================================================================
-  /** TimeCost = 1, respeitando o formato original ('20.00:00:00' -> '1.00:00:00'). */
-  const timecostOne = (v) => (typeof v === "string" && v.includes(":") ? "1.00:00:00" : 1);
+  const DEFAULT_TIMECOST = 1;
+
+  /** TimeCost = `dias`, respeitando o formato original ('20.00:00:00' -> '3.00:00:00'). */
+  const timecostDays = (v, dias) => (typeof v === "string" && v.includes(":") ? `${dias}.00:00:00` : dias);
 
   /**
    * MODELO 1 - RETIRADA
    * - AbsoluteMoneyCost, PricePercent, PriceByExtraWeight -> 0
-   * - TimeCost -> 1
+   * - TimeCost -> dias escolhidos (padrão 1)
    * - Demais colunas: mantidas exatamente como no original.
    */
-  function buildModelRetirada(rows, cols) {
+  function buildModelRetirada(rows, cols, dias = DEFAULT_TIMECOST) {
     return rows.map((r) => {
       const m = r.slice();
       for (const l of PRICE_COLUMNS) if (cols[l] >= 0) m[cols[l]] = 0;
-      if (cols.time_cost >= 0) m[cols.time_cost] = timecostOne(m[cols.time_cost]);
+      if (cols.time_cost >= 0) m[cols.time_cost] = timecostDays(m[cols.time_cost], dias);
       return m;
     });
   }
@@ -292,13 +294,13 @@
   /**
    * MODELO 2 - ENTREGA
    * - Preços: ORIGINAIS
-   * - TimeCost -> 1
+   * - TimeCost -> dias escolhidos (padrão 1)
    * - Demais colunas: mantidas exatamente como no original.
    */
-  function buildModelEntrega(rows, cols) {
+  function buildModelEntrega(rows, cols, dias = DEFAULT_TIMECOST) {
     return rows.map((r) => {
       const m = r.slice();
-      if (cols.time_cost >= 0) m[cols.time_cost] = timecostOne(m[cols.time_cost]);
+      if (cols.time_cost >= 0) m[cols.time_cost] = timecostDays(m[cols.time_cost], dias);
       return m;
     });
   }
@@ -356,6 +358,7 @@
    *   cepBase: {name, data} | null,       // base própria (.csv); null = IBGE automático
    *   ibge: async (polys, log) => [{cep, lat, lon}],
    *   columnConfig: objeto config.json | null,
+   *   timecost: { retirada: dias, entrega: dias } (padrão 1 e 1),
    *   progress: (pct, msg) => {}, log: (msg, level) => {}
    * }
    */
@@ -364,6 +367,8 @@
     const log = opts.log || (() => {});
     const aliases = loadColumnConfig(opts.columnConfig);
     const n = opts.freightFiles.length;
+    const tc = { retirada: DEFAULT_TIMECOST, entrega: DEFAULT_TIMECOST, ...opts.timecost };
+    log(`TimeCost: Retirada ${tc.retirada} dia(s), Entrega ${tc.entrega} dia(s)`);
     const tick = () => new Promise((r) => setTimeout(r, 0)); // deixa a tela atualizar
 
     // 1) Polígono da loja
@@ -407,7 +412,7 @@
       if (missing.length) log(`  ${name}: colunas não encontradas (ignoradas): ${missing.join(", ")}`, "warning");
 
       // Modelo 1 (Retirada) e Modelo 2 (Entrega) – regras nas funções buildModel*
-      for (const [suffix, model] of [["retirada", buildModelRetirada(kept, cols)], ["entrega", buildModelEntrega(kept, cols)]]) {
+      for (const [suffix, model] of [["retirada", buildModelRetirada(kept, cols, tc.retirada)], ["entrega", buildModelEntrega(kept, cols, tc.entrega)]]) {
         generated.push(...exportChunks(headers, model, `${stemOf(name)}_${suffix}`, suffix[0].toUpperCase() + suffix.slice(1), log));
       }
       log(`  ${name}: ${fmt(kept.length)} de ${fmt(rows.length)} faixas mantidas`, "success");
