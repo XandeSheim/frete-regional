@@ -81,9 +81,9 @@ h1, h2, h3 { margin: 0; font-weight: 600; }
   display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap;
 }
 .brand { display: flex; gap: 14px; align-items: center; }
-.brand > img { border-radius: 10px; }
-.brand h1 { font-size: 24px; }
-.brand p { margin: 2px 0 0; color: var(--muted); }
+.brand h1 { line-height: 0; }
+.brand .logo { display: block; height: 52px; width: auto; max-width: 100%; filter: var(--logo-filter); }
+.brand p { margin: 8px 0 0; color: var(--muted); }
 .theme { display: flex; align-items: center; gap: 8px; color: var(--muted); }
 
 select, .btn, .field input {
@@ -143,12 +143,6 @@ select option { background: var(--bg); color: var(--text); }
 .drop span { color: var(--muted); }
 .drop.over { border-color: var(--accent); background: var(--subtle-hover); }
 .drop-icon { width: 40px; height: 40px; margin-bottom: 6px; color: var(--accent); opacity: .8; }
-/* Marca d'água Avanti no espaço vazio */
-.watermark {
-  position: absolute; bottom: 18px; left: 50%; transform: translateX(-50%);
-  width: 140px; opacity: .14; filter: var(--logo-filter); pointer-events: none;
-}
-.freight.has-files .watermark { display: none; }
 
 .file-list { margin: 12px 0 0; padding-left: 26px; max-height: 260px; overflow: auto; }
 .file-list li { padding: 3px 0; overflow-wrap: anywhere; }
@@ -221,5 +215,6 @@ select option { background: var(--bg); color: var(--text); }
   .layout, .foot { padding-left: 16px; padding-right: 16px; }
   .layout { grid-template-columns: 1fr; }
   .drop { min-height: 180px; }
+  .brand .logo { height: 40px; }
   .run-row .btn.primary { width: 100%; }
 }
