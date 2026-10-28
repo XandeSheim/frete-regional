@@ -1,7 +1,7 @@
 # Frete Regional (web)
 
-Site que pega as **8 planilhas de frete base** e o **range da loja (.geojson)** e gera, para cada planilha,
-o **Modelo Retirada** e o **Modelo Entrega** só com as faixas de CEP que caem dentro do range.
+Site que pega as **8 planilhas de frete base** e o **range da loja (.geojson)** e gera **uma** planilha
+**Retirada** e **uma** de **Entrega** (juntando todas), só com as faixas de CEP que caem dentro do range.
 
 **Acesse:** https://xandesheim.github.io/frete-regional/
 

@@ -7,7 +7,8 @@
  *    (cep, latitude, longitude) -> CEPs DENTRO do polígono
  * 3. Lê as planilhas de frete base (todas as abas) -> mantém só as faixas
  *    [cep_inicio, cep_fim] que contêm pelo menos um CEP da região
- * 4. Gera, para cada planilha, o Modelo 1 (Retirada) e o Modelo 2 (Entrega)
+ * 4. Junta as faixas de todas as planilhas num único Modelo 1 (Retirada) e
+ *    num único Modelo 2 (Entrega)
  * 5. Exporta .xls (BIFF8, via SheetJS) e compacta tudo em planilhas_frete.zip
  *
  * Os nomes, a ordem e o formato das colunas originais são preservados: só as
@@ -346,7 +347,6 @@
   }
 
   const fmt = (n) => n.toLocaleString("pt-BR");
-  const stemOf = (name) => name.replace(/\.[^.]+$/, "");
 
   // ===========================================================================
   // ORQUESTRADOR
@@ -394,30 +394,44 @@
     }
     log(`CEPs dentro do range da loja: ${fmt(target.length)}`, "success");
 
-    // 3) Cada planilha -> filtro por CEP -> Modelo Retirada + Modelo Entrega
-    const generated = [];
+    // 3) Cada planilha -> filtro por CEP -> Modelo Retirada + Modelo Entrega,
+    //    juntando todas as planilhas numa só de cada modelo (colunas alinhadas por nome)
+    const headers = [];
+    const retirada = [], entrega = [];
+    const align = (head, rows) => {
+      const idx = head.map((h) => { let k = headers.indexOf(h); if (k < 0) { headers.push(h); k = headers.length - 1; } return k; });
+      return rows.map((r) => { const out = []; idx.forEach((k, i) => { out[k] = r[i]; }); return out; });
+    };
     let totalRows = 0;
     for (let i = 0; i < n; i++) {
       const { name, data } = opts.freightFiles[i];
       progress(30 + Math.floor((60 * i) / n), `Planilha ${i + 1}/${n}: ${name}`);
       await tick();
 
-      const { headers, rows } = readFreightFile(name, data, aliases, log);
-      const cols = resolveColumns(headers, aliases);
+      const { headers: head, rows } = readFreightFile(name, data, aliases, log);
+      const cols = resolveColumns(head, aliases);
       const { kept, invalid } = filterByCeps(rows, cols, target);
       if (invalid) log(`  ${name}: ${invalid} linha(s) com CEP inválido ignorada(s)`, "warning");
-      if (!kept.length) { log(`  ${name}: nenhuma faixa de CEP dentro do range – nada gerado`, "warning"); continue; }
+      if (!kept.length) { log(`  ${name}: nenhuma faixa de CEP dentro do range (não entra no resultado)`, "warning"); continue; }
       totalRows += kept.length;
       const missing = [...PRICE_COLUMNS, "time_cost"].filter((l) => cols[l] < 0);
       if (missing.length) log(`  ${name}: colunas não encontradas (ignoradas): ${missing.join(", ")}`, "warning");
 
       // Modelo 1 (Retirada) e Modelo 2 (Entrega) – regras nas funções buildModel*
-      for (const [suffix, model] of [["retirada", buildModelRetirada(kept, cols, tc.retirada)], ["entrega", buildModelEntrega(kept, cols, tc.entrega)]]) {
-        generated.push(...exportChunks(headers, model, `${stemOf(name)}_${suffix}`, suffix[0].toUpperCase() + suffix.slice(1), log));
-      }
+      retirada.push(...align(head, buildModelRetirada(kept, cols, tc.retirada)));
+      entrega.push(...align(head, buildModelEntrega(kept, cols, tc.entrega)));
       log(`  ${name}: ${fmt(kept.length)} de ${fmt(rows.length)} faixas mantidas`, "success");
     }
-    if (!generated.length) throw new Error("Nenhuma planilha teve faixas de CEP dentro do range da loja. Nada foi gerado.");
+    if (!totalRows) throw new Error("Nenhuma planilha teve faixas de CEP dentro do range da loja. Nada foi gerado.");
+
+    // Colunas que só existem em algumas planilhas ficam vazias nas demais
+    for (const r of [...retirada, ...entrega]) for (let k = 0; k < headers.length; k++) if (r[k] === undefined) r[k] = null;
+    progress(90, "Gerando planilhas de Retirada e Entrega...");
+    await tick();
+    const generated = [
+      ...exportChunks(headers, retirada, "frete_retirada", "Retirada", log),
+      ...exportChunks(headers, entrega, "frete_entrega", "Entrega", log),
+    ];
 
     // 4) ZIP com todas as planilhas
     progress(95, "Compactando planilhas (ZIP)...");
