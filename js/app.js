@@ -2,7 +2,6 @@
 (function () {
   "use strict";
 
-  const EXPECTED_FREIGHT_FILES = 8;
   const $ = (id) => document.getElementById(id);
 
   const state = { freight: [], geojson: null, cepBase: null, config: null, running: false, urls: [] };
@@ -60,8 +59,6 @@
       return li;
     }));
     const n = state.freight.length;
-    $("freight-count").textContent = `${n}/${EXPECTED_FREIGHT_FILES}`;
-    $("freight-count").classList.toggle("ok", n === EXPECTED_FREIGHT_FILES);
     $("freight-clear").hidden = !n;
     $("freight-card").classList.toggle("has-files", n > 0);
     checkReady();
@@ -168,9 +165,7 @@
     if (!state.freight.length) setStatus("Escolha as planilhas de frete.");
     else if (!state.geojson) setStatus("Escolha o range da loja (.geojson).");
     else if (!tcOk) setStatus("Informe o prazo (TimeCost) em dias inteiros, de 0 a 365.");
-    else if (state.freight.length !== EXPECTED_FREIGHT_FILES)
-      setStatus(`Pronto para gerar (${state.freight.length} planilha(s); o normal são ${EXPECTED_FREIGHT_FILES}).`);
-    else setStatus("Pronto para gerar.");
+    else setStatus(`Pronto para gerar (${state.freight.length} planilha(s)).`);
   }
 
   $("run").addEventListener("click", async () => {

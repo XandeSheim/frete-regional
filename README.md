@@ -1,6 +1,6 @@
 # Frete Regional (web)
 
-Site que pega as **8 planilhas de frete base** e o **range da loja (.geojson)** e gera **uma** planilha
+Site que pega as **planilhas de frete base** (quantas forem) e o **range da loja (.geojson)** e gera **uma** planilha
 **Retirada** e **uma** de **Entrega** (juntando todas), só com as faixas de CEP que caem dentro do range.
 
 **Acesse:** https://xandesheim.github.io/frete-regional/
@@ -10,7 +10,7 @@ públicos do IBGE são baixados.
 
 ## 📋 Como usar
 
-1. **Planilhas de frete base**: arraste ou escolha as 8 planilhas (.xls, .xlsx ou .csv). O contador fica verde em `8/8`.
+1. **Planilhas de frete base**: arraste ou escolha as planilhas (.xls, .xlsx ou .csv), sem limite de quantidade.
 2. **Range da loja**: o `.geojson` com o polígono (dá para desenhar em <https://geojson.io>). Aparece uma prévia do desenho.
 3. **Gerar planilhas de frete**: acompanhe a barra e o log. No fim, baixe o **ZIP** com tudo ou cada `.xls` separado.
 
