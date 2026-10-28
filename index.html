@@ -8,24 +8,29 @@
   <link rel="icon" href="assets/favicon-32.png" type="image/png" sizes="32x32">
   <link rel="icon" href="favicon.ico" sizes="any">
   <link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
-  <link rel="stylesheet" href="styles.css?v=2026.10.28">
+  <link rel="stylesheet" href="styles.css?v=2026.10.28b">
 </head>
 <body>
   <header class="topbar glass">
     <div class="brand">
-      <div>
-        <h1><img class="logo" src="assets/logo-frete-regional.png" alt="Frete Regional" width="892" height="208"></h1>
-        <p>Gera os modelos Retirada e Entrega só com as faixas de CEP dentro do range da loja</p>
+      <h1><img class="logo" src="assets/logo-frete-regional.png" alt="Frete Regional" width="892" height="208"></h1>
+      <p>Gera os modelos Retirada e Entrega só com as faixas de CEP dentro do range da loja</p>
+    </div>
+    <div class="theme">
+      <span id="theme-label">Tema</span>
+      <div id="theme" class="dropdown">
+        <button id="theme-btn" class="dropdown-btn" type="button" aria-haspopup="listbox" aria-expanded="false"
+          aria-labelledby="theme-label theme-btn">
+          <span id="theme-value">Sistema</span>
+          <svg class="chevron" viewBox="0 0 16 16" aria-hidden="true"><path d="M4 6l4 4 4-4"/></svg>
+        </button>
+        <ul id="theme-menu" class="dropdown-menu" role="listbox" aria-labelledby="theme-label" tabindex="-1">
+          <li role="option" data-value="system">Sistema</li>
+          <li role="option" data-value="light">Claro</li>
+          <li role="option" data-value="dark">Escuro</li>
+        </ul>
       </div>
     </div>
-    <label class="theme">
-      <span>Tema</span>
-      <select id="theme">
-        <option value="system">Sistema</option>
-        <option value="light">Claro</option>
-        <option value="dark">Escuro</option>
-      </select>
-    </label>
   </header>
 
   <main class="layout">
@@ -141,8 +146,8 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/fflate@0.8.2/umd/index.js"></script>
   <!-- Ao mudar CSS/JS, troque o ?v= (data) para os navegadores pegarem a versão nova na hora -->
-  <script src="js/processor.js?v=2026.10.28"></script>
-  <script src="js/ibge.js?v=2026.10.28"></script>
-  <script src="js/app.js?v=2026.10.28"></script>
+  <script src="js/processor.js?v=2026.10.28b"></script>
+  <script src="js/ibge.js?v=2026.10.28b"></script>
+  <script src="js/app.js?v=2026.10.28b"></script>
 </body>
 </html>

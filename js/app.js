@@ -18,13 +18,64 @@
     get(k) { try { return localStorage.getItem(k); } catch { return null; } },
     set(k, v) { try { localStorage.setItem(k, v); } catch {} },
   };
+  // Chave nova: todo mundo volta para "Sistema" uma vez; depois a escolha é lembrada
+  const THEME_KEY = "theme-v2";
+  const themeBox = $("theme"), themeBtn = $("theme-btn"), themeMenu = $("theme-menu");
+  const themeOpts = [...themeMenu.querySelectorAll("li")];
+  let themeActive = 0;
+
   function applyTheme(mode) {
     if (mode === "light" || mode === "dark") document.documentElement.dataset.theme = mode;
-    else delete document.documentElement.dataset.theme;
+    else { mode = "system"; delete document.documentElement.dataset.theme; }
+    themeOpts.forEach((li, i) => {
+      const sel = li.dataset.value === mode;
+      li.setAttribute("aria-selected", sel);
+      if (sel) { themeActive = i; $("theme-value").textContent = li.textContent; }
+    });
+    return mode;
   }
-  $("theme").value = store.get("theme") || "system";
-  applyTheme($("theme").value);
-  $("theme").addEventListener("change", (e) => { applyTheme(e.target.value); store.set("theme", e.target.value); });
+  function setActive(i) {
+    themeActive = (i + themeOpts.length) % themeOpts.length;
+    themeOpts.forEach((li, k) => li.classList.toggle("active", k === themeActive));
+  }
+  function openTheme() {
+    themeBox.classList.add("open");
+    themeBtn.setAttribute("aria-expanded", "true");
+    setActive(themeActive);
+    themeMenu.focus({ preventScroll: true });
+  }
+  function closeTheme(focusBtn = true) {
+    if (!themeBox.classList.contains("open")) return;
+    themeBox.classList.remove("open");
+    themeBtn.setAttribute("aria-expanded", "false");
+    themeOpts.forEach((li) => li.classList.remove("active"));
+    if (focusBtn) themeBtn.focus({ preventScroll: true });
+  }
+  function chooseTheme(i) {
+    store.set(THEME_KEY, applyTheme(themeOpts[i].dataset.value));
+    closeTheme();
+  }
+
+  applyTheme(store.get(THEME_KEY) || "system");
+  themeBtn.addEventListener("click", () => (themeBox.classList.contains("open") ? closeTheme() : openTheme()));
+  themeBtn.addEventListener("keydown", (e) => {
+    if (["ArrowDown", "ArrowUp", "Enter", " "].includes(e.key)) { e.preventDefault(); openTheme(); }
+  });
+  themeOpts.forEach((li, i) => {
+    li.addEventListener("click", () => chooseTheme(i));
+    li.addEventListener("mousemove", () => setActive(i));
+  });
+  themeMenu.addEventListener("keydown", (e) => {
+    if (e.key === "ArrowDown") setActive(themeActive + 1);
+    else if (e.key === "ArrowUp") setActive(themeActive - 1);
+    else if (e.key === "Home") setActive(0);
+    else if (e.key === "End") setActive(themeOpts.length - 1);
+    else if (e.key === "Enter" || e.key === " ") chooseTheme(themeActive);
+    else if (e.key === "Escape") closeTheme();
+    else { if (e.key === "Tab") closeTheme(false); return; }
+    e.preventDefault();
+  });
+  document.addEventListener("pointerdown", (e) => { if (!themeBox.contains(e.target)) closeTheme(false); });
 
   // ------------------------------------------------------------------ log
   function log(msg, level = "info") {
