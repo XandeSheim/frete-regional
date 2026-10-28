@@ -1,0 +1,9 @@
+# Nunca subir planilhas de clientes
+*.xls
+*.xlsx
+*.csv
+*.zip
+*.parquet
+node_modules/
+.DS_Store
+Thumbs.db

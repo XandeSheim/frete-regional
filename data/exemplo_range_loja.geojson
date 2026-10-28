@@ -1,0 +1,17 @@
+{
+  "type": "Feature",
+  "properties": {
+    "name": "Area de Entrega Loja SP Centro",
+    "description": "Poligono cobrindo regiao central de Sao Paulo para teste"
+  },
+  "geometry": {
+    "type": "Polygon",
+    "coordinates": [[
+      [-46.70, -23.62],
+      [-46.55, -23.62],
+      [-46.55, -23.48],
+      [-46.70, -23.48],
+      [-46.70, -23.62]
+    ]]
+  }
+}
