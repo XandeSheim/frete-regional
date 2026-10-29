@@ -137,7 +137,7 @@
       state.geojson = null;
       $("geo-name").textContent = `Arquivo inválido: ${err.message}`;
       $("geo-name").className = "muted";
-      $("geo-preview").hidden = true;
+      $("geo-preview").setAttribute("hidden", ""); // SVG não tem a propriedade .hidden
     }
     checkReady();
   });
@@ -155,7 +155,7 @@
     path.setAttribute("d", d);
     path.setAttribute("fill-rule", "evenodd");
     svg.appendChild(path);
-    svg.hidden = false;
+    svg.removeAttribute("hidden");
   }
 
   // ------------------------------------------------------------------ opcionais
