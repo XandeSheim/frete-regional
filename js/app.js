@@ -222,11 +222,12 @@
   });
 
   // ------------------------------------------------------------------ gerar
-  function checkReady() {
+  // keepStatus: só atualiza o botão (mantém "Concluído!" / erro depois de gerar)
+  function checkReady(keepStatus = false) {
     const tcOk = tcValue("retirada") !== null && tcValue("entrega") !== null;
     const ok = state.freight.length > 0 && state.geojson && tcOk && !state.running;
     $("run").disabled = !ok;
-    if (state.running) return;
+    if (state.running || keepStatus) return;
     if (!state.freight.length) setStatus("Escolha as planilhas de frete.");
     else if (!state.geojson) setStatus("Escolha o range da loja (.geojson).");
     else if (!tcOk) setStatus("Informe o prazo (TimeCost) em dias inteiros, de 0 a 365.");
@@ -266,7 +267,7 @@
       setProgress(0);
     } finally {
       state.running = false;
-      checkReady();
+      checkReady(true);
     }
   });
 

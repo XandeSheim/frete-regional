@@ -3,7 +3,7 @@
 Site que pega as **planilhas de frete base** (quantas forem) e o **range da loja (.geojson)** e gera **uma** planilha
 **Retirada** e **uma** de **Entrega** (juntando todas), só com as faixas de CEP que caem dentro do range.
 
-**Acesse:** https://xandesheim.github.io/frete-regional/
+**Acesse:** https://xandesheim.github.io/frete-regional/ · **Guia de uso:** https://xandesheim.github.io/frete-regional/guia.html
 
 Tudo roda no navegador: as planilhas **não são enviadas para nenhum servidor**. Só os endereços
 públicos do IBGE são baixados.

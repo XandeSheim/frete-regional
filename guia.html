@@ -1,0 +1,202 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Como usar · Frete Regional</title>
+  <meta name="description" content="Passo a passo para gerar as planilhas de frete Retirada e Entrega no Frete Regional.">
+  <link rel="icon" href="assets/favicon-32.png" type="image/png" sizes="32x32">
+  <link rel="icon" href="favicon.ico" sizes="any">
+  <link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
+  <link rel="stylesheet" href="styles.css?v=2026.10.29e">
+  <script>
+    // Mesmo tema escolhido no app (antes de desenhar, para não piscar)
+    try {
+      const t = localStorage.getItem("theme-v2");
+      if (t === "light" || t === "dark") document.documentElement.dataset.theme = t;
+    } catch {}
+  </script>
+</head>
+<body class="guide-page">
+  <header class="topbar glass">
+    <div class="brand">
+      <h1><a href="./" class="logo-link"><img class="logo" src="assets/logo-frete-regional.png" alt="Frete Regional" width="892" height="208"></a></h1>
+      <p>Guia de uso: do range da loja às planilhas de Retirada e Entrega</p>
+    </div>
+    <a class="btn primary" href="./">Abrir o app</a>
+  </header>
+
+  <main class="guide">
+    <nav class="card toc" aria-label="Passos">
+      <h2>Neste guia</h2>
+      <ol>
+        <li><a href="#passo-1">Desenhar o range da loja</a></li>
+        <li><a href="#passo-2">Adicionar as planilhas</a></li>
+        <li><a href="#passo-3">Escolher o range</a></li>
+        <li><a href="#passo-4">Definir o prazo</a></li>
+        <li><a href="#passo-5">Gerar e baixar</a></li>
+      </ol>
+      <ul>
+        <li><a href="#regras">O que cada planilha tem</a></li>
+        <li><a href="#duvidas">Dúvidas frequentes</a></li>
+      </ul>
+    </nav>
+
+    <div class="guide-body">
+      <section class="card intro">
+        <p class="lead">
+          O Frete Regional pega as planilhas de frete base da VTEX e o range da loja e gera duas planilhas
+          prontas para subir: uma de <strong>Retirada</strong> e uma de <strong>Entrega</strong>, só com as
+          faixas de CEP que caem dentro do range.
+        </p>
+        <p class="muted">Não precisa instalar nada, e as planilhas não saem do seu navegador. São 5 passos, cerca de 5 minutos.</p>
+      </section>
+
+      <section id="passo-1" class="card">
+        <h2><span class="step">1</span> Desenhar o range da loja</h2>
+        <p>O range é a área que a loja atende, salva como um arquivo <code>.geojson</code>. Se você já tem o arquivo, pule para o passo 2.</p>
+        <ol>
+          <li>Abra o <a href="https://geojson.io" target="_blank" rel="noopener">geojson.io</a>.</li>
+          <li>Na busca do mapa, vá até a região da loja.</li>
+          <li>Na barra de cima, escolha a ferramenta de desenho: <strong>polígono</strong> (clique ponto a ponto e feche no primeiro ponto), <strong>retângulo</strong> ou <strong>círculo</strong> (clique no centro e arraste).</li>
+          <li>Confira no painel <strong>JSON</strong>, à direita, se apareceu um <code>"type": "Polygon"</code>.</li>
+          <li>Clique em <strong>Export</strong> → <strong>GeoJSON</strong> e salve o arquivo (ex.: <code>loja.geojson</code>).</li>
+        </ol>
+        <figure>
+          <a href="assets/guia/01-geojson.webp" target="_blank"><img src="assets/guia/01-geojson.webp" alt="geojson.io com um círculo desenhado sobre Santa Catarina; o painel JSON mostra o Polygon" loading="lazy" width="1600" height="776"></a>
+          <figcaption>Círculo desenhado no geojson.io. O painel à direita mostra o Polygon.</figcaption>
+        </figure>
+        <p class="muted">O desenho pode ter várias áreas e até buracos. O site só olha os CEPs que caem dentro delas.</p>
+      </section>
+
+      <section id="passo-2" class="card">
+        <h2><span class="step">2</span> Adicionar as planilhas de frete base</h2>
+        <p>Abra o <a href="./">Frete Regional</a>. Ele tem 4 cards numerados e um botão para gerar no final.</p>
+        <figure>
+          <img src="assets/guia/02-app.webp" alt="Tela inicial do Frete Regional, sem nenhum arquivo" loading="lazy" width="1600" height="1267">
+          <figcaption>Tela inicial, antes de escolher os arquivos.</figcaption>
+        </figure>
+        <ol>
+          <li>No card <strong>1 Planilhas de frete base</strong>, arraste as planilhas para a área tracejada, ou clique nela para escolher os arquivos.</li>
+          <li>Aceita <code>.xls</code>, <code>.xlsx</code> e <code>.csv</code>. Não há limite de quantidade, e dá para adicionar em várias vezes.</li>
+          <li>Para tirar uma planilha, clique no <strong>✕</strong> ao lado do nome. <strong>Limpar lista</strong> tira todas.</li>
+        </ol>
+        <figure class="narrow">
+          <img src="assets/guia/03-planilhas.webp" alt="Card 1 com 8 planilhas de exemplo adicionadas" loading="lazy" width="1152" height="1247">
+          <figcaption>Card 1 com as planilhas adicionadas.</figcaption>
+        </figure>
+      </section>
+
+      <section id="passo-3" class="card">
+        <h2><span class="step">3</span> Escolher o range da loja</h2>
+        <ol>
+          <li>No card <strong>2 Range da loja</strong>, clique em <strong>Escolher arquivo</strong> e selecione o <code>.geojson</code> do passo 1.</li>
+          <li>O nome do arquivo aparece com um ✔ e, logo abaixo, uma prévia do desenho para você conferir o formato. Se aparecer "Arquivo inválido", refaça o export no geojson.io.</li>
+          <li>O card <strong>3 Base de CEPs</strong> é opcional: deixe em <strong>Automática (IBGE, Censo 2022)</strong>. Só use uma base própria se tiver um <code>.csv</code> com as colunas <code>cep, latitude, longitude</code>.</li>
+        </ol>
+        <figure class="narrow">
+          <img src="assets/guia/04-range.webp" alt="Cards 2 e 3: loja.geojson escolhido, com a prévia do desenho, e base de CEPs automática" loading="lazy" width="1152" height="972">
+          <figcaption>Range escolhido, com a prévia do desenho, e base de CEPs automática.</figcaption>
+        </figure>
+      </section>
+
+      <section id="passo-4" class="card">
+        <h2><span class="step">4</span> Definir o prazo (TimeCost)</h2>
+        <p>O prazo vai para a coluna TimeCost das planilhas geradas, em dias inteiros de 0 a 365.</p>
+        <ol>
+          <li><strong>Retirada</strong>: digite quantos dias a retirada leva (padrão 1).</li>
+          <li><strong>Entrega</strong>: digite quantos dias a entrega leva (padrão 1).</li>
+          <li>Para usar o prazo que já está na planilha, ligue <strong>Manter o prazo de Entrega da planilha</strong>. O campo de Entrega fica apagado e cada faixa mantém o prazo original.</li>
+        </ol>
+        <figure class="narrow">
+          <img src="assets/guia/05-prazo.webp" alt="Card 4 com Retirada 1 dia, Entrega 2 dias e o interruptor desligado" loading="lazy" width="1152" height="454">
+          <figcaption>Prazo de Retirada e de Entrega. O interruptor mantém o prazo original da Entrega.</figcaption>
+        </figure>
+        <p class="muted">O formato da planilha é respeitado: se o TimeCost estava como <code>20.00:00:00</code>, 3 dias viram <code>3.00:00:00</code>. O site lembra os últimos valores usados neste navegador.</p>
+      </section>
+
+      <section id="passo-5" class="card">
+        <h2><span class="step">5</span> Gerar e baixar</h2>
+        <ol>
+          <li>Clique em <strong>Gerar planilhas de frete</strong>. O botão só libera quando há planilhas, um range e prazos válidos.</li>
+          <li>Acompanhe a barra de progresso e o <strong>Log</strong>. Com 8 planilhas grandes, leva cerca de 1 a 2 minutos.</li>
+          <li>Quando aparecer <strong>Pronto!</strong>, clique em <strong>Baixar ZIP</strong> para levar tudo de uma vez, ou clique em <code>frete_retirada.xls</code> e <code>frete_entrega.xls</code> para baixar cada uma.</li>
+        </ol>
+        <figure>
+          <img src="assets/guia/06-resultado.webp" alt="Resultado: 745 CEPs no range, 144 faixas mantidas, 2 planilhas para baixar e o log" loading="lazy" width="1600" height="741">
+          <figcaption>Resultado: as 2 planilhas para baixar e o log do que aconteceu.</figcaption>
+        </figure>
+        <h3>Como ler o log</h3>
+        <ul class="legend">
+          <li><span class="swatch info"></span><strong>Neutro:</strong> informação (prazo usado, municípios do range, CEPs encontrados).</li>
+          <li><span class="swatch ok"></span><strong>Verde:</strong> a planilha teve faixas dentro do range (ex.: "72 de 900 faixas mantidas").</li>
+          <li><span class="swatch warn"></span><strong>Amarelo:</strong> a planilha não tem nenhuma faixa no range e fica de fora do resultado. É normal quando ela cobre outra região.</li>
+          <li><span class="swatch err"></span><strong>Vermelho:</strong> erro. A mensagem diz o que corrigir.</li>
+        </ul>
+      </section>
+
+      <section id="regras" class="card">
+        <h2>O que cada planilha gerada tem</h2>
+        <p>As duas juntam as faixas de todas as planilhas base e mantêm só as que têm pelo menos um CEP dentro do range.</p>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr><th>Coluna</th><th>frete_retirada.xls</th><th>frete_entrega.xls</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>AbsoluteMoneyCost</td><td>0</td><td>Original da planilha</td></tr>
+              <tr><td>PricePercent</td><td>0</td><td>Original da planilha</td></tr>
+              <tr><td>PriceByExtraWeight</td><td>0</td><td>Original da planilha</td></tr>
+              <tr><td>TimeCost</td><td>Dias de Retirada (passo 4)</td><td>Dias de Entrega, ou original se o interruptor estiver ligado</td></tr>
+              <tr><td>Demais colunas</td><td>Iguais à planilha</td><td>Iguais à planilha</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <section id="duvidas" class="card faq">
+        <h2>Dúvidas frequentes</h2>
+        <details>
+          <summary>A primeira vez numa região demorou bastante. É normal?</summary>
+          <p>Sim. Na primeira vez o site baixa do IBGE os endereços de cada cidade do range. Depois fica salvo no navegador e as próximas vezes são rápidas. Precisa de internet nessa primeira vez.</p>
+        </details>
+        <details>
+          <summary>Saiu <code>frete_entrega_parte1.xls</code>, <code>parte2</code>… Por quê?</summary>
+          <p>O formato <code>.xls</code> aceita até 65.000 linhas. Quando passa disso, o site divide em partes, e Retirada e Entrega ficam com o mesmo número de partes. Suba todas.</p>
+        </details>
+        <details>
+          <summary>Todas as planilhas ficaram amarelas no log.</summary>
+          <p>Nenhuma faixa caiu no range. Confira se o <code>.geojson</code> é o da loja certa e se o desenho cobre a região.</p>
+        </details>
+        <details>
+          <summary>O site não mostra a última mudança.</summary>
+          <p>Aperte <kbd>Ctrl</kbd>+<kbd>F5</kbd> para recarregar sem cache.</p>
+        </details>
+        <details>
+          <summary>Minhas planilhas vão para algum servidor?</summary>
+          <p>Não. Tudo roda no seu navegador. Só os endereços públicos do IBGE são baixados.</p>
+        </details>
+        <details>
+          <summary>Os CEPs salvos ficaram desatualizados.</summary>
+          <p>No app, abra <strong>Avançado</strong> e clique em <strong>Apagar CEPs salvos</strong>. A próxima geração baixa tudo de novo do IBGE.</p>
+        </details>
+      </section>
+
+      <div class="guide-cta">
+        <a class="btn primary" href="./">Abrir o Frete Regional</a>
+      </div>
+    </div>
+  </main>
+
+  <footer class="foot">
+    <p>
+      Suas planilhas são processadas no seu navegador e não são enviadas para nenhum servidor.
+      Só os endereços públicos do IBGE são baixados.
+    </p>
+    <div class="signature">
+      <span>Desenvolvido por</span>
+      <img src="assets/avanti.png" alt="Avanti, uma empresa FCamara" width="105" height="26">
+    </div>
+  </footer>
+</body>
+</html>
