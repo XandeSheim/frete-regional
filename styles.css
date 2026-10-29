@@ -205,6 +205,26 @@ h1, h2, h3 { margin: 0; font-weight: 600; }
 .field-input { display: flex; align-items: center; gap: 8px; font-weight: 400; color: var(--muted); }
 .field input { width: 84px; }
 .field input:invalid { border-color: var(--error); }
+.field { transition: opacity .2s; }
+.field.off { opacity: .45; }
+.field input:disabled { cursor: not-allowed; }
+
+/* Interruptor (liga/desliga) */
+.switch { display: inline-flex; align-items: center; gap: 10px; margin-top: 14px; cursor: pointer; user-select: none; }
+.switch input { position: absolute; opacity: 0; width: 1px; height: 1px; }
+.switch-track {
+  position: relative; flex: none; width: 40px; height: 22px; border-radius: var(--radius);
+  background: var(--field); border: 1px solid var(--border); box-shadow: inset 0 1px 2px rgba(0, 0, 0, .15);
+  transition: background .2s, border-color .2s;
+}
+.switch-thumb {
+  position: absolute; top: 2px; left: 2px; width: 16px; height: 16px; border-radius: 50%;
+  background: #fff; box-shadow: 0 1px 3px rgba(0, 0, 0, .3);
+  transition: transform .22s cubic-bezier(.2, .8, .2, 1);
+}
+.switch input:checked + .switch-track { background: var(--accent); border-color: var(--accent); }
+.switch input:checked + .switch-track .switch-thumb { transform: translateX(18px); }
+.switch input:focus-visible + .switch-track { outline: 2px solid var(--accent); outline-offset: 2px; }
 .hint { color: var(--muted); margin: 10px 0 0; font-size: 13px; }
 .preview {
   display: block; width: 100%; max-height: 140px; margin-top: 12px;

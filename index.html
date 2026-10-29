@@ -8,7 +8,7 @@
   <link rel="icon" href="assets/favicon-32.png" type="image/png" sizes="32x32">
   <link rel="icon" href="favicon.ico" sizes="any">
   <link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
-  <link rel="stylesheet" href="styles.css?v=2026.10.28b">
+  <link rel="stylesheet" href="styles.css?v=2026.10.29">
 </head>
 <body>
   <header class="topbar glass">
@@ -81,11 +81,16 @@
             <span>Retirada</span>
             <span class="field-input"><input id="tc-retirada" type="number" min="0" max="365" step="1" value="1" inputmode="numeric"> dia(s)</span>
           </label>
-          <label class="field">
+          <label id="tc-entrega-field" class="field">
             <span>Entrega</span>
             <span class="field-input"><input id="tc-entrega" type="number" min="0" max="365" step="1" value="1" inputmode="numeric"> dia(s)</span>
           </label>
         </div>
+        <label class="switch">
+          <input id="tc-entrega-keep" type="checkbox" role="switch">
+          <span class="switch-track" aria-hidden="true"><span class="switch-thumb"></span></span>
+          <span>Manter o prazo de Entrega da planilha</span>
+        </label>
         <p class="hint">Prazo gravado na coluna TimeCost de cada modelo.</p>
       </section>
 
@@ -146,8 +151,8 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/fflate@0.8.2/umd/index.js"></script>
   <!-- Ao mudar CSS/JS, troque o ?v= (data) para os navegadores pegarem a versão nova na hora -->
-  <script src="js/processor.js?v=2026.10.28b"></script>
-  <script src="js/ibge.js?v=2026.10.28b"></script>
-  <script src="js/app.js?v=2026.10.28b"></script>
+  <script src="js/processor.js?v=2026.10.29"></script>
+  <script src="js/ibge.js?v=2026.10.29"></script>
+  <script src="js/app.js?v=2026.10.29"></script>
 </body>
 </html>

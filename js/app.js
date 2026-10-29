@@ -189,10 +189,24 @@
   // ------------------------------------------------------------------ prazo (TimeCost)
   const TC_INPUTS = { retirada: "tc-retirada", entrega: "tc-entrega" };
   const tcValue = (key) => {
+    if (key === "entrega" && $("tc-entrega-keep").checked) return "keep";
     const raw = $(TC_INPUTS[key]).value.trim();
     const n = Number(raw);
     return raw !== "" && Number.isInteger(n) && n >= 0 && n <= 365 ? n : null;
   };
+  // Entrega pode ignorar os dias e manter o TimeCost original da planilha
+  function syncEntregaKeep() {
+    const keep = $("tc-entrega-keep").checked;
+    $("tc-entrega").disabled = keep;
+    $("tc-entrega-field").classList.toggle("off", keep);
+  }
+  $("tc-entrega-keep").checked = store.get("timecost-entrega-keep") === "1";
+  syncEntregaKeep();
+  $("tc-entrega-keep").addEventListener("change", () => {
+    store.set("timecost-entrega-keep", $("tc-entrega-keep").checked ? "1" : "0");
+    syncEntregaKeep();
+    checkReady();
+  });
   for (const [key, id] of Object.entries(TC_INPUTS)) {
     const saved = store.get(`timecost-${key}`);
     if (saved !== null) $(id).value = saved;
@@ -234,7 +248,7 @@
         geojson: state.geojson.data,
         cepBase: state.cepBase,
         columnConfig: state.config,
-        timecost: { retirada: tcValue("retirada"), entrega: tcValue("entrega") },
+        timecost: { retirada: tcValue("retirada"), entrega: tcValue("entrega") === "keep" ? null : tcValue("entrega") },
         ibge: (polys, lg) => ibge.cepsForPolygon(polys, lg),
         progress: (pct, msg) => { setProgress(pct); setStatus(msg); },
         log,

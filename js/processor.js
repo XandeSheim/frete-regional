@@ -295,13 +295,13 @@
   /**
    * MODELO 2 - ENTREGA
    * - Preços: ORIGINAIS
-   * - TimeCost -> dias escolhidos (padrão 1)
+   * - TimeCost -> dias escolhidos (padrão 1); null = mantém o prazo da planilha
    * - Demais colunas: mantidas exatamente como no original.
    */
   function buildModelEntrega(rows, cols, dias = DEFAULT_TIMECOST) {
     return rows.map((r) => {
       const m = r.slice();
-      if (cols.time_cost >= 0) m[cols.time_cost] = timecostDays(m[cols.time_cost], dias);
+      if (cols.time_cost >= 0 && dias !== null) m[cols.time_cost] = timecostDays(m[cols.time_cost], dias);
       return m;
     });
   }
@@ -358,7 +358,7 @@
    *   cepBase: {name, data} | null,       // base própria (.csv); null = IBGE automático
    *   ibge: async (polys, log) => [{cep, lat, lon}],
    *   columnConfig: objeto config.json | null,
-   *   timecost: { retirada: dias, entrega: dias } (padrão 1 e 1),
+   *   timecost: { retirada: dias, entrega: dias | null } (padrão 1 e 1; entrega null = prazo da planilha),
    *   progress: (pct, msg) => {}, log: (msg, level) => {}
    * }
    */
@@ -368,7 +368,7 @@
     const aliases = loadColumnConfig(opts.columnConfig);
     const n = opts.freightFiles.length;
     const tc = { retirada: DEFAULT_TIMECOST, entrega: DEFAULT_TIMECOST, ...opts.timecost };
-    log(`TimeCost: Retirada ${tc.retirada} dia(s), Entrega ${tc.entrega} dia(s)`);
+    log(`TimeCost: Retirada ${tc.retirada} dia(s), Entrega ${tc.entrega === null ? "mantido da planilha" : `${tc.entrega} dia(s)`}`);
     const tick = () => new Promise((r) => setTimeout(r, 0)); // deixa a tela atualizar
 
     // 1) Polígono da loja
